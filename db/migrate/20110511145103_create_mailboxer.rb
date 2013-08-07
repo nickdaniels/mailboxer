@@ -35,10 +35,12 @@ class CreateMailboxer < ActiveRecord::Migration
   #Indexes
   	#Conversations
   	#Receipts
-  	add_index "receipts","notification_id"
+    add_index "receipts", ["receiver_id", "receiver_type"]
+  	add_index "receipts", "notification_id"
 
-  	#Messages  
-  	add_index "notifications","conversation_id"
+  	#Messages
+    add_index "notifications", ["sender_id", "sender_type"]
+  	add_index "notifications", "conversation_id"
   
   #Foreign keys    
   	#Conversations
