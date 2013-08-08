@@ -191,13 +191,26 @@ module Mailboxer
       end
 
       def search_messages(query)
-        @search = Receipt.search do
-          fulltext query
-          with :receiver_id, self.id
-        end
+        if Mailboxer.search_engine == :elasticsearch
+          this = self
+          @search = Message.search load:true do |search|
+            search.query do
+              boolean do
+                must { string query }
+                must { term :recipients, "#{this.class.name}:#{this.id}" }
+              end
+            end
+          end
+        else
+          @search = Receipt.search do
+            fulltext query
+            with :receiver_id, self.id
+          end
 
-        @search.results.map { |r| r.conversation }.uniq
+          @search.results.map { |r| r.conversation }.uniq
+        end
       end
+      
     end
   end
 end

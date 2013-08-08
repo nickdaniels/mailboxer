@@ -136,7 +136,7 @@ class Receipt < ActiveRecord::Base
     end
   end
 
-  if Mailboxer.search_enabled
+  if Mailboxer.search_enabled && Mailboxer.search_engine != :elasticsearch
     searchable do
       text :subject, :boost => 5 do
         message.subject if message

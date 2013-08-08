@@ -64,4 +64,26 @@ class Message < Notification
 
     sender_receipt
   end
+
+
+  if Mailboxer.search_enabled && Mailboxer.search_engine == :elasticsearch
+    mapping do
+      indexes :recipients,   :type => :string, :index => :not_analyzed
+      indexes :sender,       :type => :string, :index => :not_analyzed
+      indexes :subject,      :analyzer => 'snowball', :boost => 5
+      indexes :body,         :analyzer => 'snowball'
+      indexes :created_at,   :type     => 'date', :include_in_all => false
+    end
+
+    def to_indexed_json
+      {
+        :recipients => recipients.map { |r| "#{r.class.name}:#{r.id}" },
+        :sender => "#{sender_type}:#{sender_id}",
+        :subject => subject,
+        :body => body,
+        :created_at => created_at,
+      }.to_json
+    end
+  end
+  
 end
