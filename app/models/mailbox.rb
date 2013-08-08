@@ -48,6 +48,8 @@ class Mailbox
 
     if (options.has_key?(:read) && options[:read]==false) || (options.has_key?(:unread) && options[:unread]==true)
       conv = conv.unread(@messageable)
+    elsif (options.has_key?(:read) && options[:read]==true) || (options.has_key?(:unread) && options[:unread]==false)
+      conv = conv.read(@messageable)
     end
 
     conv
