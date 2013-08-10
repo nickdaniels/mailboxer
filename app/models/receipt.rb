@@ -26,6 +26,7 @@ class Receipt < ActiveRecord::Base
   scope :not_trash, lambda { where(:trashed => false) }
   scope :is_read, lambda { where(:is_read => true) }
   scope :is_unread, lambda { where(:is_read => false) }
+  scope :ordered, lambda { order('receipts.created_at ASC') }
 
   after_validation :remove_duplicate_errors
   class << self
