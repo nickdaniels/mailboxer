@@ -70,7 +70,9 @@ module Mailboxer
         message.conversation = convo
         message.recipients = recipients.is_a?(Array) ? recipients : [recipients]
         message.recipients = message.recipients.uniq
-        message.deliver false, sanitize_text
+        message.deliver(false, sanitize_text).tap do
+          mailboxer_notify(message) if self.respond_to? :mailboxer_notify
+        end
       end
 
       #Basic reply method. USE NOT RECOMENDED.
@@ -83,7 +85,9 @@ module Mailboxer
         response.recipients = recipients.is_a?(Array) ? recipients : [recipients]
         response.recipients = response.recipients.uniq
         response.recipients.delete(self)
-        response.deliver true, sanitize_text
+        response.deliver(true, sanitize_text).tap do
+          mailboxer_notify(response) if self.respond_to? :mailboxer_notify
+        end
       end
 
       #Replies to the sender of the message in the conversation
@@ -125,6 +129,8 @@ module Mailboxer
           obj.mark_as_read(self)
         when Array
           obj.map{ |sub_obj| mark_as_read(sub_obj) }
+        end.tap do
+          mailboxer_notify if self.respond_to? :mailboxer_notify
         end
       end
 
@@ -146,6 +152,8 @@ module Mailboxer
           obj.mark_as_unread(self)
         when Array
           obj.map{ |sub_obj| mark_as_unread(sub_obj) }
+        end.tap do
+          mailboxer_notify if self.respond_to? :mailboxer_notify
         end
       end
 
@@ -167,6 +175,8 @@ module Mailboxer
           obj.move_to_trash(self)
         when Array
           obj.map{ |sub_obj| trash(sub_obj) }
+        end.tap do
+          mailboxer_notify if self.respond_to? :mailboxer_notify
         end
       end
 
@@ -188,6 +198,8 @@ module Mailboxer
           obj.untrash(self)
         when Array
           obj.map{ |sub_obj| untrash(sub_obj) }
+        end.tap do
+          mailboxer_notify if self.respond_to? :mailboxer_notify
         end
       end
 
@@ -211,7 +223,7 @@ module Mailboxer
           @search.results.map { |r| r.conversation }.uniq
         end
       end
-      
+
     end
   end
 end
