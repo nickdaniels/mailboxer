@@ -64,6 +64,8 @@ class Receipt < ActiveRecord::Base
     #Acording to the github ticket https://github.com/rails/rails/issues/522 it should be
     #supported with 3.2.
     def update_receipts(updates,options={})
+      conversation.touch # update the conversation timestamp
+
       ids = Array.new
       where(options).each do |rcp|
         ids << rcp.id
