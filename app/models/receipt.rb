@@ -32,32 +32,32 @@ class Receipt < ActiveRecord::Base
   class << self
     #Marks all the receipts from the relation as read
     def mark_as_read(options={})
-      update_receipts({:is_read => true}, options)
+      update_receipts({:is_read => true, :updated_at => Time.now}, {:is_read => false}.merge(options))
     end
 
     #Marks all the receipts from the relation as unread
     def mark_as_unread(options={})
-      update_receipts({:is_read => false}, options)
+      update_receipts({:is_read => false, :updated_at => Time.now}, {:is_read => true}.merge(options))
     end
 
     #Marks all the receipts from the relation as trashed
     def move_to_trash(options={})
-      update_receipts({:trashed => true}, options)
+      update_receipts({:trashed => true, :updated_at => Time.now}, {:trashed => false}.merge(options))
     end
 
     #Marks all the receipts from the relation as not trashed
     def untrash(options={})
-      update_receipts({:trashed => false}, options)
+      update_receipts({:trashed => false, :updated_at => Time.now}, {:trashed => true}.merge(options))
     end
 
     #Moves all the receipts from the relation to inbox
     def move_to_inbox(options={})
-      update_receipts({:mailbox_type => :inbox, :trashed => false}, options)
+      update_receipts({:mailbox_type => :inbox, :trashed => false, :updated_at => Time.now}, {:mailbox_type => :sentbox}.merge(options))
     end
 
     #Moves all the receipts from the relation to sentbox
     def move_to_sentbox(options={})
-      update_receipts({:mailbox_type => :sentbox, :trashed => false}, options)
+      update_receipts({:mailbox_type => :sentbox, :trashed => false, :updated_at => Time.now}, {:mailbox_type => :inbox}.merge(options))
     end
 
     #This methods helps to do a update_all with table joins, not currently supported by rails.
@@ -82,32 +82,32 @@ class Receipt < ActiveRecord::Base
 
   #Marks the receipt as read
   def mark_as_read
-    update_attributes(:is_read => true)
+    update_attributes(:is_read => true, :updated_at => Time.now) unless is_read?
   end
 
   #Marks the receipt as unread
   def mark_as_unread
-    update_attributes(:is_read => false)
+    update_attributes(:is_read => false, :updated_at => Time.now) unless is_unread?
   end
 
   #Marks the receipt as trashed
   def move_to_trash
-    update_attributes(:trashed => true)
+    update_attributes(:trashed => true, :updated_at => Time.now) unless is_trashed?
   end
 
   #Marks the receipt as not trashed
   def untrash
-    update_attributes(:trashed => false)
+    update_attributes(:trashed => false, :updated_at => Time.now) if is_trashed?
   end
 
   #Moves the receipt to inbox
   def move_to_inbox
-    update_attributes(:mailbox_type => :inbox, :trashed => false)
+    update_attributes(:mailbox_type => :inbox, :trashed => false, :updated_at => Time.now) unless mailbox_type == 'inbox'
   end
 
   #Moves the receipt to sentbox
   def move_to_sentbox
-    update_attributes(:mailbox_type => :sentbox, :trashed => false)
+    update_attributes(:mailbox_type => :sentbox, :trashed => false, :updated_at => Time.now) unless mailbox_type == 'sentbox'
   end
 
   #Returns the conversation associated to the receipt if the notification is a Message
