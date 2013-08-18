@@ -129,8 +129,8 @@ module Mailboxer
           obj.mark_as_read(self)
         when Array
           obj.map{ |sub_obj| mark_as_read(sub_obj) }
-        end.tap do
-          mailboxer_notify if self.respond_to? :mailboxer_notify
+        end.tap do |ret|
+          mailboxer_notify if ret && self.respond_to? :mailboxer_notify
         end
       end
 
@@ -152,8 +152,8 @@ module Mailboxer
           obj.mark_as_unread(self)
         when Array
           obj.map{ |sub_obj| mark_as_unread(sub_obj) }
-        end.tap do
-          mailboxer_notify if self.respond_to? :mailboxer_notify
+        end.tap do |ret|
+          mailboxer_notify if ret && self.respond_to? :mailboxer_notify
         end
       end
 
@@ -175,8 +175,8 @@ module Mailboxer
           obj.move_to_trash(self)
         when Array
           obj.map{ |sub_obj| trash(sub_obj) }
-        end.tap do
-          mailboxer_notify if self.respond_to? :mailboxer_notify
+        end.tap do |ret|
+          mailboxer_notify if ret && self.respond_to? :mailboxer_notify
         end
       end
 
@@ -198,8 +198,8 @@ module Mailboxer
           obj.untrash(self)
         when Array
           obj.map{ |sub_obj| untrash(sub_obj) }
-        end.tap do
-          mailboxer_notify if self.respond_to? :mailboxer_notify
+        end.tap do |ret|
+          mailboxer_notify if ret && self.respond_to? :mailboxer_notify
         end
       end
 
