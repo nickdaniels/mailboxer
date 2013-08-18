@@ -64,8 +64,6 @@ class Receipt < ActiveRecord::Base
     #Acording to the github ticket https://github.com/rails/rails/issues/522 it should be
     #supported with 3.2.
     def update_receipts(updates,options={})
-      conversation.touch # update the conversation timestamp
-
       ids = Array.new
       where(options).each do |rcp|
         ids << rcp.id
@@ -77,7 +75,9 @@ class Receipt < ActiveRecord::Base
           condition << "OR id = ? "
         end
         conditions[0] = condition
-        Receipt.except(:where).except(:joins).where(conditions).update_all(updates)
+        receipts = Receipt.except(:where).except(:joins).where(conditions)
+        receipts.first.conversation.touch
+        receipts.update_all(updates)
       end
     end
   end
