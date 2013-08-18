@@ -86,7 +86,7 @@ module Mailboxer
         response.recipients = response.recipients.uniq
         response.recipients.delete(self)
         response.deliver(true, sanitize_text).tap do
-          mailboxer_notify(response) if self.respond_to? :mailboxer_notify
+          mailboxer_notify(response) if self.respond_to?(:mailboxer_notify)
         end
       end
 
@@ -130,7 +130,7 @@ module Mailboxer
         when Array
           obj.map{ |sub_obj| mark_as_read(sub_obj) }
         end.tap do |ret|
-          mailboxer_notify if ret && self.respond_to? :mailboxer_notify
+          mailboxer_notify if ret && self.respond_to?(:mailboxer_notify)
         end
       end
 
@@ -153,7 +153,7 @@ module Mailboxer
         when Array
           obj.map{ |sub_obj| mark_as_unread(sub_obj) }
         end.tap do |ret|
-          mailboxer_notify if ret && self.respond_to? :mailboxer_notify
+          mailboxer_notify if ret && self.respond_to?(:mailboxer_notify)
         end
       end
 
@@ -176,7 +176,7 @@ module Mailboxer
         when Array
           obj.map{ |sub_obj| trash(sub_obj) }
         end.tap do |ret|
-          mailboxer_notify if ret && self.respond_to? :mailboxer_notify
+          mailboxer_notify if ret && self.respond_to?(:mailboxer_notify)
         end
       end
 
@@ -199,7 +199,7 @@ module Mailboxer
         when Array
           obj.map{ |sub_obj| untrash(sub_obj) }
         end.tap do |ret|
-          mailboxer_notify if ret && self.respond_to? :mailboxer_notify
+          mailboxer_notify if ret && self.respond_to?(:mailboxer_notify)
         end
       end
 
