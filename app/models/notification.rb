@@ -1,9 +1,10 @@
 class Notification < ActiveRecord::Base
   if Mailboxer.search_enabled && Mailboxer.search_engine == :elasticsearch
-    include Tire::Model::Search
-    include Tire::Model::Callbacks
+    include Elasticsearch::Model
+    after_save    { Indexer.queue(:index, self) }
+    after_destroy { Indexer.queue(:delete, self) }
   end
-  
+
   attr_accessor :recipients
   attr_accessible :body, :subject, :global, :expires if Mailboxer.protected_attributes?
 

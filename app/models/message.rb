@@ -60,12 +60,12 @@ class Message < Notification
     mapping do
       indexes :recipients,   :type => :string, :index => :not_analyzed
       indexes :sender,       :type => :string, :index => :not_analyzed
-      indexes :subject,      :analyzer => 'snowball', :boost => 5
-      indexes :body,         :analyzer => 'snowball'
-      indexes :created_at,   :type     => 'date', :include_in_all => false
+      indexes :subject,      :analyzer => :snowball, :boost => 5
+      indexes :body,         :analyzer => :snowball
+      indexes :created_at,   :type     => :date, :include_in_all => false
     end
 
-    def to_indexed_json
+    def as_indexed_json(options = {})
       {
         :recipients => recipients.map { |r| "#{r.class.name}:#{r.id}" },
         :sender => "#{sender_type}:#{sender_id}",

@@ -5,8 +5,8 @@ Gem::Specification.new do |s|
   s.summary = "Messaging system for rails apps."
   s.description = "A Rails engine that allows any model to act as messageable, adding the ability to exchange messages " +
                    "with any other messageable model, even different ones. It supports the use of conversations with " +
-                   "two or more recipients to organize the messages. You have a complete use of a mailbox object for " + 
-                   "each messageable model that manages an inbox, sentbox and trash for conversations. It also supports " + 
+                   "two or more recipients to organize the messages. You have a complete use of a mailbox object for " +
+                   "each messageable model that manages an inbox, sentbox and trash for conversations. It also supports " +
                    "sending notifications to messageable models, intended to be used as system notifications."
   s.email = "ecasanovac@gmail.com"
   s.homepage = "https://github.com/ging/mailboxer"
@@ -38,6 +38,8 @@ Gem::Specification.new do |s|
   s.add_development_dependency('forgery', '>= 0.3.6')
   # Integration testing
   s.add_development_dependency('capybara', '>= 0.3.9')
+  # Elasticsearch
+  s.add_development_dependency('elasticsearch-model')
   # Testing database
   if RUBY_PLATFORM == 'java'
     s.add_development_dependency('jdbc-sqlite3')
